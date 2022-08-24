@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 	"time"
@@ -24,16 +25,20 @@ func TestExamplesComplete(t *testing.T) {
 	terraform.InitAndApplyAndIdempotent(t, terraformOptions)
 
 	functionUrl := terraform.Output(t, terraformOptions, "function_url")
-	sendEvent(functionUrl)
+	resp, err := sendEvent(functionUrl)
+	assert.NoError(t, err)
+	assert.Equal(t, 200, resp.StatusCode)
 
 	t.Log("Sleeping...")
 	time.Sleep(5 * time.Minute)
 }
 
-func sendEvent(functionUrl string) {
+func sendEvent(functionUrl string) (*http.Response, error) {
+	fmt.Println("sending HTTP POST to: ", functionUrl)
 	values := map[string]string{"test1": "value1"}
 	jsonData, _ := json.Marshal(values)
 	resp, err := http.Post(functionUrl, "application/json", bytes.NewBuffer(jsonData))
 	fmt.Println(err)
 	fmt.Println(resp)
+	return resp, err
 }
