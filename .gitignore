@@ -45,4 +45,3 @@ override.tf.json
 .settings/
 .classpath
 .project
-venv/
