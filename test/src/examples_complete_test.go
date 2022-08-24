@@ -37,11 +37,9 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 
 	assert.NoError(t, waitForS3Objects(bucket, region, 10, 90))
-
-	t.Log("Sleeping...")
-	time.Sleep(5 * time.Minute)
 }
 
+// sendEvent sends an HTTP POST with a test json body to the Lambda function url
 func sendEvent(functionUrl string) (*http.Response, error) {
 	fmt.Println("sending HTTP POST to: ", functionUrl)
 	values := map[string]string{"test1": "value1"}
@@ -52,6 +50,7 @@ func sendEvent(functionUrl string) (*http.Response, error) {
 	return resp, err
 }
 
+// waitForS3Objects waits for any objects to be created in the given bucket
 func waitForS3Objects(bucketName string, region string, delaySeconds, attempts uint) error {
 	return retry.Do(func() error {
 		output, err := listBucketObjects(bucketName, region)
@@ -66,6 +65,7 @@ func waitForS3Objects(bucketName string, region string, delaySeconds, attempts u
 	}, retry.Delay(time.Duration(delaySeconds)*time.Second), retry.Attempts(attempts))
 }
 
+// listBucketObjects lists all the objects in the given bucket
 func listBucketObjects(bucketName string, region string) (*s3.ListObjectsV2Output, error) {
 	fmt.Println("Listing objects in bucket: ", bucketName)
 	sess, _ := session.NewSessionWithOptions(session.Options{
