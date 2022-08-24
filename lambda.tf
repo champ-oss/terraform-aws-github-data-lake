@@ -1,7 +1,7 @@
 data "archive_file" "this" {
   type             = "zip"
   output_file_mode = "0666"
-  source_dir       = "${path.module}/github_event_receiver_lambda/github_event_receiver_lambda.py"
+  source_file      = "${path.module}/github_event_receiver_lambda/github_event_receiver_lambda.py"
   output_path      = "${path.module}/github_event_receiver_lambda.zip"
 }
 
