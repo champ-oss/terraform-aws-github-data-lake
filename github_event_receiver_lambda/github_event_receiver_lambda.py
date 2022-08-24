@@ -1,8 +1,15 @@
-import boto3
-import time
+import json
+import os
 
+import boto3
+
+SNS_CLIENT = boto3.client('sns')
+SNS_TOPIC_ARN = os.getenv('SNS_TOPIC_ARN')
 
 
 def handler(event, _):
     print('Event:', event)
-    time.sleep(10)
+    return SNS_CLIENT.publish(
+        TopicArn=SNS_TOPIC_ARN,
+        Message=json.dumps(event)
+    )

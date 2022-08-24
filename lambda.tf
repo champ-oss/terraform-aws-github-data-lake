@@ -16,4 +16,7 @@ module "lambda" {
   source_code_hash                = data.archive_file.this.output_base64sha256
   enable_function_url             = true
   function_url_authorization_type = "NONE"
+  environment = {
+    SNS_TOPIC_ARN = aws_sns_topic.this.arn
+  }
 }
