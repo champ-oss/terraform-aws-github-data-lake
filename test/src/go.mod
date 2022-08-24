@@ -1,4 +1,4 @@
-module github.com/champ-oss/terraform-module-template
+module github.com/champ-oss/terraform-aws-github-data-lake
 
 go 1.17
 

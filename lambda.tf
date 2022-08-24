@@ -1,0 +1,16 @@
+data "archive_file" "this" {
+  type             = "zip"
+  output_file_mode = "0666"
+  source_dir       = "${path.module}/github_event_receiver_lambda/github_event_receiver_lambda.py"
+  output_path      = "${path.module}/github_event_receiver_lambda.zip"
+}
+
+module "lambda" {
+  source           = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.82-7c600ed"
+  git              = var.git
+  name             = "github_event_receiver_lambda"
+  tags             = merge(local.tags, var.tags)
+  runtime          = var.runtime
+  filename         = data.archive_file.this.output_path
+  source_code_hash = data.archive_file.this.output_base64sha256
+}
