@@ -18,5 +18,7 @@ func TestExamplesComplete(t *testing.T) {
 	}
 	defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApplyAndIdempotent(t, terraformOptions)
+
+	t.Log("Sleeping...")
 	time.Sleep(10 * time.Minute)
 }
