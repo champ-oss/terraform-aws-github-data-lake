@@ -1,3 +1,5 @@
+name: pytest
+
 on:
   workflow_dispatch:
   push:
@@ -8,7 +10,7 @@ defaults:
     working-directory: github_event_receiver_lambda
 
 jobs:
-  python-check:
+  pytest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
