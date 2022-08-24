@@ -8,4 +8,5 @@ resource "aws_sns_topic_subscription" "this" {
   protocol              = "firehose"
   endpoint              = aws_kinesis_firehose_delivery_stream.this.arn
   subscription_role_arn = aws_iam_role.this.arn
+  raw_message_delivery  = true
 }
