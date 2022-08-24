@@ -1,7 +1,11 @@
 package test
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	"net/http"
 	"testing"
 	"time"
 )
@@ -19,6 +23,17 @@ func TestExamplesComplete(t *testing.T) {
 	defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApplyAndIdempotent(t, terraformOptions)
 
+	functionUrl := terraform.Output(t, terraformOptions, "function_url")
+	sendEvent(functionUrl)
+
 	t.Log("Sleeping...")
-	time.Sleep(10 * time.Minute)
+	time.Sleep(5 * time.Minute)
+}
+
+func sendEvent(functionUrl string) {
+	values := map[string]string{"test1": "value1"}
+	jsonData, _ := json.Marshal(values)
+	resp, err := http.Post(functionUrl, "application/json", bytes.NewBuffer(jsonData))
+	fmt.Println(err)
+	fmt.Println(resp)
 }
