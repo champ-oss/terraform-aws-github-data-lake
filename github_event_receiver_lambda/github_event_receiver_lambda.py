@@ -3,8 +3,8 @@ import os
 
 import boto3
 
-SNS_CLIENT = boto3.client('sns')
 SNS_TOPIC_ARN = os.getenv('SNS_TOPIC_ARN')
+SNS_CLIENT = boto3.client('sns', region_name=os.getenv('AWS_REGION'))
 
 
 def handler(event, _):
