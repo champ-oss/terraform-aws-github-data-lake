@@ -24,14 +24,11 @@ jobs:
           pip install flake8 pytest coverage
 
       - name: Lint with flake8
-        run: |
-          flake8 . --count --max-complexity=12 --max-line-length=127 --statistics --exclude venv
+        run: flake8 . --count --max-complexity=12 --max-line-length=127 --statistics --exclude venv
 
       - name: Test with pytest
-        run: |
-          coverage run -m pytest
+        run: coverage run -m pytest
 
       - name: Check coverage
         working-directory: src
-        run: |
-          coverage report --fail-under=80
+        run: coverage report --fail-under=80
