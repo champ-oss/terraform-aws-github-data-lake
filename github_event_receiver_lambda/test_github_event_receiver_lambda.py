@@ -11,4 +11,3 @@ class Test(TestCase):
         github_event_receiver_lambda.SNS_CLIENT.publish = MagicMock(return_value="test")
         result = github_event_receiver_lambda.handler(None, None)
         self.assertEqual("test", result)
-
