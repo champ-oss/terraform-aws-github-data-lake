@@ -6,11 +6,14 @@ data "archive_file" "this" {
 }
 
 module "lambda" {
-  source           = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.82-7c600ed"
-  git              = var.git
-  name             = "github_event_receiver_lambda"
-  tags             = merge(local.tags, var.tags)
-  runtime          = var.runtime
-  filename         = data.archive_file.this.output_path
-  source_code_hash = data.archive_file.this.output_base64sha256
+  source                          = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.82-7c600ed"
+  git                             = var.git
+  name                            = "github_event_receiver_lambda"
+  tags                            = merge(local.tags, var.tags)
+  runtime                         = var.runtime
+  handler                         = "github_event_receiver_lambda.handler"
+  filename                        = data.archive_file.this.output_path
+  source_code_hash                = data.archive_file.this.output_base64sha256
+  enable_function_url             = true
+  function_url_authorization_type = "NONE"
 }
