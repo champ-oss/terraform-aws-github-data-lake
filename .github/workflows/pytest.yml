@@ -25,11 +25,13 @@ jobs:
           pip install -r requirements.txt
 
       - name: Lint with flake8
+        if: always()
         run: flake8 . --count --max-complexity=12 --max-line-length=127 --statistics --exclude venv
 
       - name: Test with pytest
+        if: always()
         run: coverage run -m pytest
 
       - name: Check coverage
-        working-directory: src
+        if: always()
         run: coverage report --fail-under=80
