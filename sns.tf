@@ -1,6 +1,7 @@
 resource "aws_sns_topic" "this" {
-  name_prefix = "${var.git}-"
-  tags        = merge(local.tags, var.tags)
+  name_prefix       = "${var.git}-"
+  kms_master_key_id = "alias/aws/sns"
+  tags              = merge(local.tags, var.tags)
 }
 
 resource "aws_sns_topic_subscription" "this" {
