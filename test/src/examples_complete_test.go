@@ -36,21 +36,10 @@ func TestExamplesComplete(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode)
 
-	err = retry.Do(func() error {
-		output, err := listBucketObjects(bucket, region)
-		if err != nil {
-			return err
-		}
-		if len(output.Contents) == 0 {
-			return fmt.Errorf("bucket is empty")
-		}
-		return nil
+	assert.NoError(t, waitForS3Objects(bucket, region, 10, 90))
 
-	}, retry.Delay(10*time.Second), retry.Attempts(60))
-	assert.NoError(t, err)
-
-	//t.Log("Sleeping...")
-	//time.Sleep(10 * time.Minute)
+	t.Log("Sleeping...")
+	time.Sleep(5 * time.Minute)
 }
 
 func sendEvent(functionUrl string) (*http.Response, error) {
@@ -61,6 +50,20 @@ func sendEvent(functionUrl string) (*http.Response, error) {
 	fmt.Println(err)
 	fmt.Println(resp)
 	return resp, err
+}
+
+func waitForS3Objects(bucketName string, region string, delaySeconds, attempts uint) error {
+	return retry.Do(func() error {
+		output, err := listBucketObjects(bucketName, region)
+		if err != nil {
+			return err
+		}
+		if len(output.Contents) == 0 {
+			return fmt.Errorf("bucket is empty")
+		}
+		return nil
+
+	}, retry.Delay(time.Duration(delaySeconds)*time.Second), retry.Attempts(attempts))
 }
 
 func listBucketObjects(bucketName string, region string) (*s3.ListObjectsV2Output, error) {

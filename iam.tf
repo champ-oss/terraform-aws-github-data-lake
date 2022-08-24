@@ -23,6 +23,11 @@ resource "aws_iam_role_policy_attachment" "firehose" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonKinesisFirehoseFullAccess"
 }
 
+resource "aws_iam_role_policy_attachment" "s3" {
+  role       = aws_iam_role.this.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
 # Used for the Lambda
 data "aws_iam_policy_document" "this" {
   statement {
