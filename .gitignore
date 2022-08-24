@@ -46,3 +46,4 @@ override.tf.json
 .classpath
 .project
 venv/
+.coverage
