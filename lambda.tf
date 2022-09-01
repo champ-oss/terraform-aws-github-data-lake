@@ -6,7 +6,7 @@ data "archive_file" "this" {
 }
 
 module "lambda" {
-  source                          = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.87-e51fddf"
+  source                          = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.89-7aa1d19"
   git                             = var.git
   name                            = "github_event_receiver_lambda"
   tags                            = merge(local.tags, var.tags)
