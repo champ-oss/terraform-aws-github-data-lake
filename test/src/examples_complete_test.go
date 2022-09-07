@@ -25,7 +25,7 @@ func TestExamplesComplete(t *testing.T) {
 		EnvVars:       map[string]string{},
 		Vars:          map[string]interface{}{},
 	}
-	defer terraform.Destroy(t, terraformOptions)
+	//defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApplyAndIdempotent(t, terraformOptions)
 
 	functionUrl := terraform.Output(t, terraformOptions, "function_url")
