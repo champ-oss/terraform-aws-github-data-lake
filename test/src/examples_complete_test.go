@@ -5,7 +5,6 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"github.com/avast/retry-go"
 	"github.com/aws/aws-sdk-go/aws"
@@ -55,11 +54,13 @@ func TestExamplesComplete(t *testing.T) {
 func sendEvent(functionUrl string, secretHeader string, sharedSecret string) (*http.Response, error) {
 	fmt.Println("sending HTTP POST to: ", functionUrl)
 
-	payload := map[string]string{"test1": "value1"}
-	body, _ := json.Marshal(payload)
-
-	req, err := http.NewRequest("POST", functionUrl, bytes.NewBuffer(body))
-	req.Header.Set(secretHeader, GenerateSha256Hmac(string(body), sharedSecret))
+	var jsonData = []byte(`{
+		"test1": "value1",
+		"test2": "value2"
+	}`)
+	req, err := http.NewRequest("POST", functionUrl, bytes.NewBuffer(jsonData))
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	req.Header.Set(secretHeader, GenerateSha256Hmac(string(jsonData), sharedSecret))
 
 	client := &http.Client{
 		Timeout: time.Second * 30,
