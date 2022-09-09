@@ -29,7 +29,8 @@ class Test(TestCase):
             },
             'body': "test123"
         }
-        self.assertEqual({'statusCode': 401}, self.github_event_receiver_lambda.handler(event, None))
+        with self.assertRaises(ValueError):
+            self.github_event_receiver_lambda.handler(event, None)
 
     def test__is_signature_valid_returns_true_with_valid_signature(self):
         event = {

@@ -20,7 +20,7 @@ def handler(event: Dict[str, Any], _) -> dict:
     print('requestContext:', event.get('requestContext'))
 
     if not _is_signature_valid(event, os.getenv('SHARED_SECRET', '')):
-        return _create_response(401)
+        raise ValueError('invalid signature')
 
     _publish(SNS_CLIENT, os.getenv('SNS_TOPIC_ARN'), event.get('body'))
     return _create_response(200)
