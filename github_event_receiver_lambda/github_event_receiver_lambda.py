@@ -8,7 +8,7 @@ import boto3
 BODY_KEY = os.getenv('BODY_KEY', 'body')
 HEADERS_KEY = os.getenv('HEADERS_KEY', 'headers')
 SIGNATURE_HEADER_KEY = os.getenv('SIGNATURE_HEADER_KEY')
-SHARED_SECRET = bytes(os.getenv('SHARED_SECRET', ''))
+SHARED_SECRET = os.getenv('SHARED_SECRET', '')
 SNS_TOPIC_ARN = os.getenv('SNS_TOPIC_ARN')
 SNS_CLIENT = boto3.client('sns', region_name=os.getenv('AWS_REGION'))
 
@@ -23,7 +23,9 @@ def handler(event, _):
 
 
 def _is_signature_valid(event: Dict[str, Any]) -> bool:
-    signature = hmac.new(SHARED_SECRET, msg=event.get(BODY_KEY, ''), digestmod=hashlib.sha256).hexdigest()
+    signature = hmac.new(bytes(SHARED_SECRET, encoding='utf-8'),
+                         msg=event.get(BODY_KEY, ''),
+                         digestmod=hashlib.sha256).hexdigest()
     print('calculated signature:', signature)
     return signature == event.get(HEADERS_KEY, {}).get(SIGNATURE_HEADER_KEY)
 
