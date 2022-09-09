@@ -38,14 +38,19 @@ func TestExamplesComplete(t *testing.T) {
 	bucket := terraform.Output(t, terraformOptions, "bucket")
 	region := terraform.Output(t, terraformOptions, "region")
 
+	// test sending an HTTP POST request and checking that the data arrived in successfully S3
 	resp, err := sendEvent(functionUrl, "x-hub-signature-256", sharedSecret)
 	assert.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode)
-
 	assert.NoError(t, waitForS3Objects(bucket, region, 10, 30))
 
+	// test sending an HTTP POST request with an invalid secret
+	resp, err = sendEvent(functionUrl, "x-hub-signature-256", "not valid")
+	assert.NoError(t, err)
+	assert.Equal(t, 401, resp.StatusCode)
+
 	fmt.Println("sleeping before destroy")
-	time.Sleep(5 * time.Minute)
+	time.Sleep(3 * time.Minute)
 }
 
 // sendEvent sends an HTTP POST with a test json body to the Lambda function url
