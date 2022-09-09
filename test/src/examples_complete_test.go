@@ -6,7 +6,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"github.com/avast/retry-go"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -72,18 +71,24 @@ func sendEvent(functionUrl string, secretHeader string, sharedSecret string) (*h
 }
 
 // waitForS3Objects waits for any objects to be created in the given bucket
-func waitForS3Objects(bucketName string, region string, delaySeconds, attempts uint) error {
-	return retry.Do(func() error {
+func waitForS3Objects(bucketName string, region string, delaySeconds, attempts int) error {
+	for i := 0; ; i++ {
 		output, err := listBucketObjects(bucketName, region)
 		if err != nil {
-			return err
+			fmt.Println(err)
+		} else {
+			if len(output.Contents) > 0 {
+				return nil
+			}
 		}
-		if len(output.Contents) == 0 {
-			return fmt.Errorf("bucket is empty")
-		}
-		return nil
 
-	}, retry.Delay(time.Duration(delaySeconds)*time.Second), retry.Attempts(attempts))
+		if i >= (attempts - 1) {
+			return fmt.Errorf("timed out while retrying")
+		}
+
+		fmt.Printf("Retrying in %d seconds...\n", delaySeconds)
+		time.Sleep(time.Second * time.Duration(delaySeconds))
+	}
 }
 
 // listBucketObjects lists all the objects in the given bucket
