@@ -16,7 +16,9 @@ def handler(event: Dict[str, Any], _) -> dict:
     :param _: unused context
     :return: dict of HTTP response information
     """
-    print('event:', event)
+    print('headers:', event.get('headers'))
+    print('requestContext:', event.get('requestContext'))
+
     if not _is_signature_valid(event, os.getenv('SHARED_SECRET', '')):
         return _create_response(401)
 
@@ -33,9 +35,9 @@ def _is_signature_valid(event: Dict[str, Any], shared_secret: str) -> bool:
     :param shared_secret: secret used to sign the message payload
     :return: true or false
     """
-    signature = hmac.new(shared_secret.encode('utf-8'),
-                         msg=event.get('body', '').encode('utf-8'),
-                         digestmod=hashlib.sha256).hexdigest()
+    signature = 'sha256=' + hmac.new(shared_secret.encode('utf-8'),
+                                     msg=event.get('body', '').encode('utf-8'),
+                                     digestmod=hashlib.sha256).hexdigest()
     print('calculated signature:', signature)
     return signature == event.get('headers', {}).get('x-hub-signature-256')
 

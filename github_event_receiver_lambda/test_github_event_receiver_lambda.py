@@ -16,7 +16,7 @@ class Test(TestCase):
     def test_handler_returns_200_with_valid_signature(self):
         event = {
             'headers': {
-                'x-hub-signature-256': '062ef9199de74587dc0ff97d6273f0a6734e0346d48669a7e35b636c12171a7c'
+                'x-hub-signature-256': 'sha256=062ef9199de74587dc0ff97d6273f0a6734e0346d48669a7e35b636c12171a7c'
             },
             'body': "test123"
         }
@@ -34,7 +34,7 @@ class Test(TestCase):
     def test__is_signature_valid_returns_true_with_valid_signature(self):
         event = {
             'headers': {
-                'x-hub-signature-256': '062ef9199de74587dc0ff97d6273f0a6734e0346d48669a7e35b636c12171a7c'
+                'x-hub-signature-256': 'sha256=062ef9199de74587dc0ff97d6273f0a6734e0346d48669a7e35b636c12171a7c'
             },
             'body': "test123"
         }
