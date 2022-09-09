@@ -47,7 +47,7 @@ func TestExamplesComplete(t *testing.T) {
 	// test sending an HTTP POST request with an invalid secret
 	resp, err = sendEvent(functionUrl, "x-hub-signature-256", "not valid")
 	assert.NoError(t, err)
-	assert.Equal(t, 401, resp.StatusCode)
+	assert.Equal(t, 502, resp.StatusCode)
 
 	fmt.Println("sleeping before destroy")
 	time.Sleep(3 * time.Minute)
@@ -63,7 +63,7 @@ func sendEvent(functionUrl string, secretHeader string, sharedSecret string) (*h
 	}`)
 	req, err := http.NewRequest("POST", functionUrl, bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-	req.Header.Set(secretHeader, GenerateSha256Hmac(string(jsonData), sharedSecret))
+	req.Header.Set(secretHeader, "sha256="+GenerateSha256Hmac(string(jsonData), sharedSecret))
 
 	client := &http.Client{
 		Timeout: time.Second * 30,
