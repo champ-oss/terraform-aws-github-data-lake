@@ -22,8 +22,3 @@ output "region" {
   description = "AWS Region"
   value       = data.aws_region.this.name
 }
-
-output "signature_header_key" {
-  description = "Signature Header Key"
-  value       = var.signature_header_key
-}

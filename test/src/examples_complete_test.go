@@ -37,9 +37,8 @@ func TestExamplesComplete(t *testing.T) {
 	functionUrl := terraform.Output(t, terraformOptions, "function_url")
 	bucket := terraform.Output(t, terraformOptions, "bucket")
 	region := terraform.Output(t, terraformOptions, "region")
-	signatureHeaderKey := terraform.Output(t, terraformOptions, "signature_header_key")
 
-	resp, err := sendEvent(functionUrl, signatureHeaderKey, sharedSecret)
+	resp, err := sendEvent(functionUrl, "x-hub-signature-256", sharedSecret)
 	assert.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode)
 

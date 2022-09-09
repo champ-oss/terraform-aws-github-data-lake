@@ -12,8 +12,3 @@ output "region" {
   description = "AWS Region"
   value       = module.this.region
 }
-
-output "signature_header_key" {
-  description = "Signature Header Key"
-  value       = module.this.signature_header_key
-}

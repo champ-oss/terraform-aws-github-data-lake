@@ -19,6 +19,5 @@ module "lambda" {
   environment = {
     SNS_TOPIC_ARN        = aws_sns_topic.this.arn
     SHARED_SECRET        = var.shared_secret
-    SIGNATURE_HEADER_KEY = var.signature_header_key
   }
 }

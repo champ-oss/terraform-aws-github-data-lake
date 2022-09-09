@@ -8,12 +8,6 @@ variable "shared_secret" {
   type        = string
 }
 
-variable "signature_header_key" {
-  description = "https://docs.github.com/en/developers/webhooks-and-events/webhooks/securing-your-webhooks"
-  type        = string
-  default     = "x-hub-signature-256"
-}
-
 variable "tags" {
   description = "https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html"
   type        = map(string)
