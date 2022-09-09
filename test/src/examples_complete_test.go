@@ -2,6 +2,9 @@ package test
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/avast/retry-go"
@@ -19,35 +22,52 @@ import (
 func TestExamplesComplete(t *testing.T) {
 	t.Parallel()
 
+	// Secret used to sign the payload when sending test events
+	sharedSecret := "testing123"
+
 	terraformOptions := &terraform.Options{
 		TerraformDir:  "../../examples/complete",
 		BackendConfig: map[string]interface{}{},
 		EnvVars:       map[string]string{},
-		Vars:          map[string]interface{}{},
+		Vars: map[string]interface{}{
+			"shared_secret": sharedSecret,
+		},
 	}
-	//defer terraform.Destroy(t, terraformOptions)
+	defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApplyAndIdempotent(t, terraformOptions)
 
 	functionUrl := terraform.Output(t, terraformOptions, "function_url")
 	bucket := terraform.Output(t, terraformOptions, "bucket")
 	region := terraform.Output(t, terraformOptions, "region")
+	signatureHeaderKey := terraform.Output(t, terraformOptions, "signature_header_key")
 
-	resp, err := sendEvent(functionUrl)
+	resp, err := sendEvent(functionUrl, signatureHeaderKey, sharedSecret)
 	assert.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode)
 
 	assert.NoError(t, waitForS3Objects(bucket, region, 10, 90))
+
+	fmt.Println("sleeping before destroy")
+	time.Sleep(5 * time.Minute)
 }
 
 // sendEvent sends an HTTP POST with a test json body to the Lambda function url
-func sendEvent(functionUrl string) (*http.Response, error) {
+func sendEvent(functionUrl string, secretHeader string, sharedSecret string) (*http.Response, error) {
 	fmt.Println("sending HTTP POST to: ", functionUrl)
-	values := map[string]string{"test1": "value1"}
-	jsonData, _ := json.Marshal(values)
-	resp, err := http.Post(functionUrl, "application/json", bytes.NewBuffer(jsonData))
+
+	payload := map[string]string{"test1": "value1"}
+	body, _ := json.Marshal(payload)
+
+	req, err := http.NewRequest("POST", functionUrl, bytes.NewBuffer(body))
+	req.Header.Set(secretHeader, GenerateSha256Hmac(string(body), sharedSecret))
+
+	client := &http.Client{
+		Timeout: time.Second * 30,
+	}
+	response, err := client.Do(req)
+	fmt.Println(response)
 	fmt.Println(err)
-	fmt.Println(resp)
-	return resp, err
+	return response, err
 }
 
 // waitForS3Objects waits for any objects to be created in the given bucket
@@ -75,4 +95,11 @@ func listBucketObjects(bucketName string, region string) (*s3.ListObjectsV2Outpu
 	resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{Bucket: aws.String(bucketName)})
 	fmt.Println("objects in bucket: ", len(resp.Contents))
 	return resp, err
+}
+
+// GenerateSha256Hmac generates a HMAC digest of the given data string
+func GenerateSha256Hmac(data, key string) string {
+	h := hmac.New(sha256.New, []byte(key))
+	h.Write([]byte(data))
+	return hex.EncodeToString(h.Sum(nil))
 }
