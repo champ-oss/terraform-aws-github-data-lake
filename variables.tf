@@ -3,6 +3,11 @@ variable "git" {
   type        = string
 }
 
+variable "shared_secret" {
+  description = "https://docs.github.com/en/developers/webhooks-and-events/webhooks/securing-your-webhooks"
+  type        = string
+}
+
 variable "tags" {
   description = "https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html"
   type        = map(string)

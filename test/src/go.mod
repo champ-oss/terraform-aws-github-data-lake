@@ -3,7 +3,6 @@ module github.com/champ-oss/terraform-aws-github-data-lake
 go 1.17
 
 require (
-	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/aws/aws-sdk-go v1.44.93
 	github.com/gruntwork-io/terratest v0.40.21
 	github.com/stretchr/testify v1.8.0
