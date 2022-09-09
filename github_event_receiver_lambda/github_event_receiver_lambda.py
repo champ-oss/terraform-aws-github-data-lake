@@ -7,7 +7,7 @@ import boto3
 
 BODY_KEY = os.getenv('BODY_KEY', 'body')
 HEADERS_KEY = os.getenv('HEADERS_KEY', 'headers')
-SIGNATURE_HEADER_KEY = os.getenv('SIGNATURE_HEADER_KEY')
+SIGNATURE_HEADER_KEY = os.getenv('SIGNATURE_HEADER_KEY', '')
 SHARED_SECRET = os.getenv('SHARED_SECRET', '')
 ENCODING = os.getenv('ENCODING', 'utf-8')
 SNS_TOPIC_ARN = os.getenv('SNS_TOPIC_ARN')

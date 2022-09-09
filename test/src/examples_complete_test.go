@@ -45,7 +45,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode)
 
-	assert.NoError(t, waitForS3Objects(bucket, region, 10, 90))
+	assert.NoError(t, waitForS3Objects(bucket, region, 10, 30))
 
 	fmt.Println("sleeping before destroy")
 	time.Sleep(5 * time.Minute)
