@@ -57,10 +57,7 @@ func TestExamplesComplete(t *testing.T) {
 func sendEvent(functionUrl string, secretHeader string, sharedSecret string) (*http.Response, error) {
 	fmt.Println("sending HTTP POST to: ", functionUrl)
 
-	var jsonData = []byte(`{
-		"test1": "value1",
-		"test2": "value2"
-	}`)
+	var jsonData = []byte(`{"test1":"value1","test2":"value2"}`)
 	req, err := http.NewRequest("POST", functionUrl, bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	req.Header.Set(secretHeader, "sha256="+GenerateSha256Hmac(string(jsonData), sharedSecret))
