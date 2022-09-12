@@ -15,7 +15,7 @@ resource "aws_glue_catalog_table" "this" {
     "projection.datehour.range"         = "2020/01/01/00,NOW"
     "projection.datehour.type"          = "date"
     "projection.enabled"                = "true"
-    "storage.location.template"         = "s3://${module.s3.bucket}/${datehour}/"
+    "storage.location.template"         = "s3://${module.s3.bucket}/$${datehour}/"
   }
 
   partition_keys {

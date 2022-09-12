@@ -50,7 +50,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, 502, resp.StatusCode)
 
 	fmt.Println("sleeping before destroy")
-	time.Sleep(3 * time.Minute)
+	time.Sleep(5 * time.Minute)
 }
 
 // sendEvent sends an HTTP POST with a test json body to the Lambda function url
