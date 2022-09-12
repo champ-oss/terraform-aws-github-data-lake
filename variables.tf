@@ -43,3 +43,26 @@ variable "compression_format" {
   type        = string
   default     = "UNCOMPRESSED"
 }
+
+variable "table_string_columns" {
+  description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_table#name"
+  type        = list(string)
+  default     = [
+    "action",
+    "after",
+    "before",
+    "changes",
+    "check_suite",
+    "check_run",
+    "comment",
+    "issue",
+    "number",
+    "organization",
+    "pull_request",
+    "repository",
+    "sender",
+    "workflow",
+    "workflow_job",
+    "workflow_run",
+  ]
+}
