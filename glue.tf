@@ -15,7 +15,7 @@ resource "aws_glue_catalog_table" "this" {
     "projection.datehour.range"         = "2020/01/01/00,NOW"
     "projection.datehour.type"          = "date"
     "projection.enabled"                = "true"
-    "storage.location.template"         = "s3://${module.s3.bucket}/$${datehour}/"
+    "storage.location.template"         = "s3://${module.s3.bucket}/${var.prefix}/$${datehour}/"
   }
 
   partition_keys {
@@ -26,7 +26,7 @@ resource "aws_glue_catalog_table" "this" {
   storage_descriptor {
     input_format  = "org.apache.hadoop.mapred.TextInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
-    location      = "s3://${module.s3.bucket}/"
+    location      = "s3://${module.s3.bucket}/${var.prefix}/"
 
     ser_de_info {
       name                  = "JsonSerDe"
