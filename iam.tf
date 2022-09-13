@@ -36,6 +36,12 @@ data "aws_iam_policy_document" "this" {
     ]
     resources = [aws_sns_topic.this.arn]
   }
+  statement {
+    actions = [
+      "KMS:Decrypt"
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_policy" "this" {
