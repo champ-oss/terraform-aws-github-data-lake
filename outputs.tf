@@ -22,3 +22,13 @@ output "region" {
   description = "AWS Region"
   value       = data.aws_region.this.name
 }
+
+output "database" {
+  description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_database"
+  value       = aws_glue_catalog_database.this.name
+}
+
+output "table" {
+  description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_table"
+  value       = aws_glue_catalog_table.this.name
+}
