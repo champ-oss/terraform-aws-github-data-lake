@@ -38,13 +38,12 @@ jobs:
       - name: apply
         working-directory: examples/complete
         run: |
-          export TF_INPUT=${TF_INPUT:-false}
-          export TF_IN_AUTOMATION=${TF_IN_AUTOMATION:-true}
-          export TF_VAR_git=`echo ${GITHUB_REPOSITORY} | sed -e 's|.*/||'`
           terraform init
           terraform apply -auto-approve
+      - name: destroy
+        working-directory: examples/complete
+        run: |
           terraform destroy -auto-approve
-
 
 #defaults:
 #  run:
