@@ -29,14 +29,15 @@ env:
 jobs:
   apply:
     runs-on: ubuntu-latest
-    working-directory: examples/complete
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v1.3.2
         with:
           terraform_version: 1.1.4
           terraform_wrapper: false
-      - run: |
+      - name: apply
+        working-directory: examples/complete
+        run: |
           export TF_INPUT=${TF_INPUT:-false}
           export TF_IN_AUTOMATION=${TF_IN_AUTOMATION:-true}
           export TF_VAR_git=`echo ${GITHUB_REPOSITORY} | sed -e 's|.*/||'`
