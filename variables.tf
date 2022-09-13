@@ -53,7 +53,7 @@ variable "prefix" {
 variable "table_string_columns" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_table#name"
   type        = list(string)
-  default     = [
+  default = [
     "action",
     "after",
     "before",
