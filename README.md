@@ -48,3 +48,30 @@ repository.
 - An HTTP test event is sent to the Lambda function without a secret set to validate the event is rejected
 - The S3 bucket is inspected to ensure the test event data is written successfully
 - An AWS Athena query is executed and the result is checked to ensure data is returned successfully
+
+<!-- BEGIN_TF_DOCS -->
+
+## Requirements
+
+No requirements.
+
+## Providers
+
+No providers.
+
+## Modules
+
+No modules.
+
+## Resources
+
+No resources.
+
+## Inputs
+
+No inputs.
+
+## Outputs
+
+No outputs.
+<!-- END_TF_DOCS -->
