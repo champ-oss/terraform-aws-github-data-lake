@@ -1,3 +1,4 @@
+import base64
 import hashlib
 import hmac
 import os
@@ -9,7 +10,9 @@ from botocore.exceptions import NoCredentialsError
 SNS_CLIENT = boto3.client('sns', region_name=os.getenv('AWS_REGION'))
 KMS_CLIENT = boto3.client('kms', region_name=os.getenv('AWS_REGION'))
 try:
-    SHARED_SECRET = KMS_CLIENT.decrypt(CiphertextBlob=os.getenv('SHARED_SECRET', '').encode('utf-8'))['Plaintext']
+    SHARED_SECRET = KMS_CLIENT.decrypt(
+        CiphertextBlob=bytes(base64.b64decode(os.getenv('SHARED_SECRET')))
+    )['Plaintext']
 except NoCredentialsError:
     SHARED_SECRET = ''
 
