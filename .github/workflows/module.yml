@@ -26,8 +26,13 @@ env:
   NEW_RELIC_REGION: ${{ secrets.NEW_RELIC_REGION }}
   NEW_RELIC_ACCOUNT_ID: ${{ secrets.NEW_RELIC_ACCOUNT_ID }}
 
+defaults:
+  run:
+    shell: bash
+    working-directory: examples/complete
+
 jobs:
-  apply:
+  module:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -36,14 +41,12 @@ jobs:
           terraform_version: 1.1.4
           terraform_wrapper: false
       - name: apply
-        working-directory: examples/complete
         run: |
           terraform init
           terraform apply -auto-approve
       - name: destroy
-        working-directory: examples/complete
-        run: |
-          terraform destroy -auto-approve
+        if: always()
+        run: terraform destroy -auto-approve
 
 #defaults:
 #  run:
