@@ -8,10 +8,10 @@ class Test(TestCase):
 
     def setUp(self) -> None:
         os.environ['AWS_REGION'] = 'test'
-        os.environ['SHARED_SECRET'] = 'testing123'
         import github_event_receiver_lambda as github_event_receiver_lambda
         self.github_event_receiver_lambda = github_event_receiver_lambda
         self.github_event_receiver_lambda.SNS_CLIENT.publish = MagicMock(return_value='test')
+        self.github_event_receiver_lambda.SHARED_SECRET = 'testing123'
 
     def test_handler_returns_200_with_valid_signature(self):
         event = {

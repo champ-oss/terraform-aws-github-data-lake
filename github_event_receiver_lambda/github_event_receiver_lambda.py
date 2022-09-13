@@ -4,8 +4,14 @@ import os
 from typing import Dict, Any
 
 import boto3
+from botocore.exceptions import NoCredentialsError
 
 SNS_CLIENT = boto3.client('sns', region_name=os.getenv('AWS_REGION'))
+KMS_CLIENT = boto3.client('kms', region_name=os.getenv('AWS_REGION'))
+try:
+    SHARED_SECRET = KMS_CLIENT.decrypt(CiphertextBlob=os.getenv('SHARED_SECRET', '').encode('utf-8'))['Plaintext']
+except NoCredentialsError:
+    SHARED_SECRET = ''
 
 
 def handler(event: Dict[str, Any], _) -> dict:
@@ -19,7 +25,7 @@ def handler(event: Dict[str, Any], _) -> dict:
     print('headers:', event.get('headers'))
     print('requestContext:', event.get('requestContext'))
 
-    if not _is_signature_valid(event, os.getenv('SHARED_SECRET', '')):
+    if not _is_signature_valid(event, SHARED_SECRET):
         raise ValueError('invalid signature')
 
     _publish(SNS_CLIENT, os.getenv('SNS_TOPIC_ARN'), event.get('body'))
