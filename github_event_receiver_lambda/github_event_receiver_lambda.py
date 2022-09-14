@@ -14,7 +14,7 @@ try:
         CiphertextBlob=bytes(base64.b64decode(os.getenv('SHARED_SECRET')))
     )['Plaintext']
 except NoCredentialsError:
-    SHARED_SECRET = ''
+    SHARED_SECRET = b''
 
 
 def handler(event: Dict[str, Any], _) -> dict:
@@ -35,7 +35,7 @@ def handler(event: Dict[str, Any], _) -> dict:
     return _create_response(200)
 
 
-def _is_signature_valid(event: Dict[str, Any], shared_secret: str) -> bool:
+def _is_signature_valid(event: Dict[str, Any], shared_secret: bytes) -> bool:
     """
     verifies that the signature in the request header matches the
     actual signature of the request payload
@@ -44,9 +44,10 @@ def _is_signature_valid(event: Dict[str, Any], shared_secret: str) -> bool:
     :param shared_secret: secret used to sign the message payload
     :return: true or false
     """
-    signature = 'sha256=' + hmac.new(shared_secret.encode('utf-8'),
-                                     msg=event.get('body', '').encode('utf-8'),
-                                     digestmod=hashlib.sha256).hexdigest()
+    signature = 'sha256=' + hmac.new(
+        shared_secret,
+        msg=event.get('body', '').encode('utf-8'),
+        digestmod=hashlib.sha256).hexdigest()
     print('calculated signature:', signature)
     return signature == event.get('headers', {}).get('x-hub-signature-256')
 
