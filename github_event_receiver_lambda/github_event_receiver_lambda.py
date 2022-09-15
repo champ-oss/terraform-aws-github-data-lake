@@ -1,11 +1,20 @@
+import base64
 import hashlib
 import hmac
 import os
 from typing import Dict, Any
 
 import boto3
+from botocore.exceptions import NoCredentialsError
 
 SNS_CLIENT = boto3.client('sns', region_name=os.getenv('AWS_REGION'))
+KMS_CLIENT = boto3.client('kms', region_name=os.getenv('AWS_REGION'))
+try:
+    SHARED_SECRET = KMS_CLIENT.decrypt(
+        CiphertextBlob=bytes(base64.b64decode(os.getenv('SHARED_SECRET')))
+    )['Plaintext']
+except NoCredentialsError:
+    SHARED_SECRET = b''
 
 
 def handler(event: Dict[str, Any], _) -> dict:
@@ -19,14 +28,14 @@ def handler(event: Dict[str, Any], _) -> dict:
     print('headers:', event.get('headers'))
     print('requestContext:', event.get('requestContext'))
 
-    if not _is_signature_valid(event, os.getenv('SHARED_SECRET', '')):
+    if not _is_signature_valid(event, SHARED_SECRET):
         raise ValueError('invalid signature')
 
     _publish(SNS_CLIENT, os.getenv('SNS_TOPIC_ARN'), event.get('body'))
     return _create_response(200)
 
 
-def _is_signature_valid(event: Dict[str, Any], shared_secret: str) -> bool:
+def _is_signature_valid(event: Dict[str, Any], shared_secret: bytes) -> bool:
     """
     verifies that the signature in the request header matches the
     actual signature of the request payload
@@ -35,9 +44,10 @@ def _is_signature_valid(event: Dict[str, Any], shared_secret: str) -> bool:
     :param shared_secret: secret used to sign the message payload
     :return: true or false
     """
-    signature = 'sha256=' + hmac.new(shared_secret.encode('utf-8'),
-                                     msg=event.get('body', '').encode('utf-8'),
-                                     digestmod=hashlib.sha256).hexdigest()
+    signature = 'sha256=' + hmac.new(
+        shared_secret,
+        msg=event.get('body', '').encode('utf-8'),
+        digestmod=hashlib.sha256).hexdigest()
     print('calculated signature:', signature)
     return signature == event.get('headers', {}).get('x-hub-signature-256')
 
