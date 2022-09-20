@@ -12,7 +12,7 @@ locals {
 }
 
 module "kms" {
-  source                  = "github.com/champ-oss/terraform-aws-kms.git?ref=v1.0.26-dab24a0"
+  source                  = "github.com/champ-oss/terraform-aws-kms.git?ref=v1.0.27-67253e4"
   git                     = local.git
   name                    = "alias/${local.git}"
   deletion_window_in_days = 7
