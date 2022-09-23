@@ -41,7 +41,7 @@ variable "buffer_interval" {
 variable "compression_format" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream#compression_format"
   type        = string
-  default     = "UNCOMPRESSED"
+  default     = "GZIP"
 }
 
 variable "prefix" {
