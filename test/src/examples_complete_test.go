@@ -46,7 +46,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode)
 	
-	resp, err := sendEvent(functionUrl, "x-hub-signature-256", sharedSecret)
+	resp, err = sendEvent(functionUrl, "x-hub-signature-256", sharedSecret)
 	assert.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode)
 	
