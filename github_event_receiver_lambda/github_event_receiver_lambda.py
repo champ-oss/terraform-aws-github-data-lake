@@ -78,7 +78,7 @@ def _publish(sns_client: boto3.client, topic_arn: str, message: str) -> dict:
     print('publishing to SNS topic:', topic_arn)
     publish_response = sns_client.publish(
         TopicArn=topic_arn,
-        Message=message
+        Message=message + '\n'
     )
     print('publish_response', publish_response)
     return publish_response
