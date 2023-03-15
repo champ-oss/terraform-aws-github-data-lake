@@ -64,7 +64,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.NoError(t, err)
 	rows, err := getAthenaResults(region, queryId)
 	assert.NoError(t, err)
-	assert.GreaterOrEqual(t, len(rows), 2)
+	assert.GreaterOrEqual(t, len(rows), 3) // 2 data rows + 1 for header row
 }
 
 // sendEvent sends an HTTP POST with a test json body to the Lambda function url
