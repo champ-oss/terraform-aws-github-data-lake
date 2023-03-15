@@ -31,4 +31,5 @@ module "this" {
   buffer_interval = 60
   shared_secret   = aws_kms_ciphertext.this.ciphertext_blob
   tags            = local.tags
+  prefix          = "test/"
 }

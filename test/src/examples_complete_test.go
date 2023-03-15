@@ -41,10 +41,16 @@ func TestExamplesComplete(t *testing.T) {
 	table := terraform.Output(t, terraformOptions, "table")
 	database := terraform.Output(t, terraformOptions, "database")
 
-	// test sending an HTTP POST request and checking that the data arrived in successfully S3
+	// test sending two HTTP POST requests 
 	resp, err := sendEvent(functionUrl, "x-hub-signature-256", sharedSecret)
 	assert.NoError(t, err)
 	assert.Equal(t, 200, resp.StatusCode)
+	
+	resp, err = sendEvent(functionUrl, "x-hub-signature-256", sharedSecret)
+	assert.NoError(t, err)
+	assert.Equal(t, 200, resp.StatusCode)
+	
+	// check that the data arrived in successfully S3
 	assert.NoError(t, waitForS3Objects(bucket, region, 10, 30))
 
 	// test sending an HTTP POST request with an invalid secret
@@ -58,7 +64,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.NoError(t, err)
 	rows, err := getAthenaResults(region, queryId)
 	assert.NoError(t, err)
-	assert.GreaterOrEqual(t, len(rows), 1)
+	assert.GreaterOrEqual(t, len(rows), 3) // 2 data rows + 1 for header row
 }
 
 // sendEvent sends an HTTP POST with a test json body to the Lambda function url
