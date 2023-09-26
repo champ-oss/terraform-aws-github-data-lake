@@ -12,5 +12,7 @@ curl -s -X POST -H "${CT_HEADER}" -H "${HMAC_HEADER}" -d "${POST_DATA}" $FUNCTIO
 
 echo -e "\nWaiting for S3 objects..."
 sleep 120
-aws s3 ls s3://$BUCKET --recursive
+aws s3 ls s3://$BUCKET --recursive | grep .gz
 
+echo -e "\nTest sending an HTTP POST request with an invalid secret"
+curl -s -X POST -H "${CT_HEADER}" -H "x-hub-signature-256: sha256=invalid" -d "${POST_DATA}" $FUNCTION_URL
