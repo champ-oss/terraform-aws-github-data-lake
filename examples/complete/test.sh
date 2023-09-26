@@ -12,5 +12,5 @@ curl -s -X POST -H "${CT_HEADER}" -H "${HMAC_HEADER}" -d "${POST_DATA}" $FUNCTIO
 
 echo -e "\nWaiting for S3 objects..."
 sleep 120
-aws s3 ls s3://$BUCKET
+aws s3 ls s3://$BUCKET --recursive
 
