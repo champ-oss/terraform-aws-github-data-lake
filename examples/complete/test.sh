@@ -6,5 +6,9 @@ HMAC=$(echo -n "${POST_DATA}" | openssl dgst -sha256 -hmac "${SHARED_SECRET}" | 
 HMAC_HEADER="x-hub-signature-256: sha256=${HMAC}"
 CT_HEADER="Content-Type: application/json; charset=UTF-8"
 
-curl -X POST -H "${CT_HEADER}" -H "${HMAC_HEADER}" -d "${POST_DATA}" $FUNCTION_URL
+curl -v -X POST -H "${CT_HEADER}" -H "${HMAC_HEADER}" -d "${POST_DATA}" $FUNCTION_URL
+
+echo -e "\nWaiting for S3 objects..."
+sleep 60
+aws s3 ls s3://$BUCKET
 
