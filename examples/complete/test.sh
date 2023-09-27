@@ -15,4 +15,7 @@ sleep 120
 aws s3 ls s3://$BUCKET --recursive | grep .gz
 
 echo -e "\nTest sending an HTTP POST request with an invalid secret"
-curl -s -X POST -H "${CT_HEADER}" -H "x-hub-signature-256: sha256=invalid" -d "${POST_DATA}" $FUNCTION_URL
+curl -s -X POST -H "${CT_HEADER}" -H "x-hub-signature-256: sha256=invalid" -d "${POST_DATA}" $FUNCTION_URL | grep "Internal Server Error"
+
+echo -e "\nStarting Athena query..."
+aws athena start-query-execution --query-execution-context "Database=${DATABASE}" --result-configuration "OutputLocation=s3://${BUCKET}/" --query-string "SELECT * FROM \""${TABLE}"\""
