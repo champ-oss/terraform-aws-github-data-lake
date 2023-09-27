@@ -28,4 +28,4 @@ cat query.txt
 
 echo -e "\nGetting Athena query results..."
 sleep 30
-aws athena get-query-results --query-execution-id `cat query.txt`
+aws athena get-query-results --query-execution-id `cat query.txt` --output text
