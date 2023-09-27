@@ -1,7 +1,7 @@
 set -e
 
 SHARED_SECRET="testing123"
-POST_DATA='{"action":"completed","number":"54"}'
+POST_DATA='{"action":"completed","number":"54","comment":"test_data_1"}'
 HMAC=$(echo -n "${POST_DATA}" | openssl dgst -sha256 -hmac "${SHARED_SECRET}" | cut -d ' ' -f 2)
 HMAC_HEADER="x-hub-signature-256: sha256=${HMAC}"
 CT_HEADER="Content-Type: application/json; charset=UTF-8"
@@ -28,4 +28,4 @@ cat query.txt
 
 echo -e "\nGetting Athena query results..."
 sleep 30
-aws athena get-query-results --query-execution-id `cat query.txt` --output text
+aws athena get-query-results --query-execution-id `cat query.txt` | grep "test_data_1"
