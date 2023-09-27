@@ -18,4 +18,14 @@ echo -e "\nTest sending an HTTP POST request with an invalid secret"
 curl -s -X POST -H "${CT_HEADER}" -H "x-hub-signature-256: sha256=invalid" -d "${POST_DATA}" $FUNCTION_URL | grep "Internal Server Error"
 
 echo -e "\nStarting Athena query..."
-aws athena start-query-execution --query-execution-context "Database=${DATABASE}" --result-configuration "OutputLocation=s3://${BUCKET}/" --query-string "SELECT * FROM \""${TABLE}"\""
+aws athena start-query-execution \
+  --query-execution-context "Database=${DATABASE}" \
+  --result-configuration "OutputLocation=s3://${BUCKET}/" \
+  --query-string "SELECT * FROM \""${TABLE}"\"" \
+  --output text > query.txt
+
+cat query.txt
+
+echo -e "\nGetting Athena query results..."
+sleep 30
+aws athena get-query-results --query-execution-id `cat query.txt`
