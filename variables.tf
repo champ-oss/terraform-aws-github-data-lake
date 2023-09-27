@@ -26,14 +26,14 @@ variable "runtime" {
   default     = "python3.8"
 }
 
-variable "buffer_size" {
-  description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream#buffer_size"
+variable "buffering_size" {
+  description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream#buffering_size"
   type        = number
   default     = 5
 }
 
-variable "buffer_interval" {
-  description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream#buffer_interval"
+variable "buffering_interval" {
+  description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream#buffering_interval"
   type        = number
   default     = 300
 }
