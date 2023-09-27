@@ -22,3 +22,8 @@ output "table" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_table"
   value       = module.this.table
 }
+
+output "shared_secret" {
+  description = "Shared HMAC secret"
+  value       = local.shared_secret
+}

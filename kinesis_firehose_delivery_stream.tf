@@ -7,8 +7,8 @@ resource "aws_kinesis_firehose_delivery_stream" "this" {
     role_arn           = aws_iam_role.this.arn
     bucket_arn         = module.s3.arn
     prefix             = var.prefix
-    buffer_size        = var.buffer_size
-    buffer_interval    = var.buffer_interval
+    buffering_size     = var.buffering_size
+    buffering_interval = var.buffering_interval
     compression_format = var.compression_format
   }
 }
