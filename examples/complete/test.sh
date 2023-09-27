@@ -28,4 +28,5 @@ cat query.txt
 
 echo -e "\nGetting Athena query results..."
 sleep 30
-aws athena get-query-results --query-execution-id `cat query.txt` | grep "test_data_1"
+# there should be two rows of test data in the query results
+aws athena get-query-results --query-execution-id `cat query.txt` | grep "test_data_1" | wc -l | grep 2
