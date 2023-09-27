@@ -3,7 +3,8 @@ provider "aws" {
 }
 
 locals {
-  git = "terraform-aws-github-data-lake"
+  git           = "terraform-aws-github-data-lake"
+  shared_secret = "testing123"
   tags = {
     git     = local.git
     cost    = "shared"
@@ -21,15 +22,15 @@ module "kms" {
 
 resource "aws_kms_ciphertext" "this" {
   key_id    = module.kms.key_id
-  plaintext = var.shared_secret
+  plaintext = local.shared_secret
 }
 
 module "this" {
-  source          = "../../"
-  git             = local.git
-  protect         = false
-  buffer_interval = 60
-  shared_secret   = aws_kms_ciphertext.this.ciphertext_blob
-  tags            = local.tags
-  prefix          = "test/"
+  source             = "../../"
+  git                = local.git
+  protect            = false
+  buffering_interval = 60
+  shared_secret      = aws_kms_ciphertext.this.ciphertext_blob
+  tags               = local.tags
+  prefix             = "test/"
 }
