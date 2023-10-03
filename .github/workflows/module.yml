@@ -106,7 +106,7 @@ jobs:
   module:
     runs-on: ubuntu-latest
     if: always()
-    needs: [ run-example, check-examples ]
+    needs: [run-example, check-examples]
     steps:
       - name: module
         working-directory: .
